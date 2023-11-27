@@ -1,3 +1,5 @@
+import {Node} from "../../data-structures";
+
 const INITIAL_VALUE = {
     modal: {
         opened: false,
@@ -11,7 +13,7 @@ type actionType = {
     payload: {
         opened: boolean
         type?: string,
-        content: string | undefined
+        content: string | undefined | Node
     }
 }
 

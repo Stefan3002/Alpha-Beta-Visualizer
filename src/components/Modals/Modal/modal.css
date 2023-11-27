@@ -1,0 +1,30 @@
+.modal {
+  background: whitesmoke;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 50vw;
+  max-height: 95vh;
+  overflow: auto;
+  z-index: 6;
+  border-radius: 10px;
+}
+
+.modal-header {
+  background: #0B3954;
+  color: #BFD7EA;
+  margin: 0;
+  padding: 1rem;
+}
+.modal-header h2 {
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  padding: 1rem;
+}
+
+/*# sourceMappingURL=modal.css.map */

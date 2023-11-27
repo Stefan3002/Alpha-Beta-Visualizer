@@ -1,7 +1,7 @@
 import './home-page.css'
 import {FC, useEffect, useRef} from "react";
 import Header from "../Header/header";
-import {initAlgo, solveMinMax, solveMinMaxFront} from "../../utils/min-max-logic";
+import {solveMinMax, solveMinMaxFront, useMinMaxAlgo} from "../../utils/min-max-logic";
 import Input from "../Input/input";
 import Button from "../Button/button";
 import Canvas from "../Canvas/canvas";
@@ -16,17 +16,8 @@ type propsType = {
 
 }
 const HomePage: FC<propsType> = () => {
-    const rootNode = useRef<Node>(new Node())
     const dispatch = useDispatch()
-
-    useEffect(() => {
-        (async () => {
-            const root = await initAlgo()
-            rootNode.current = root
-        })()
-    }, [])
-
-
+    const initMinMax = useMinMaxAlgo()
 
     return (
         <div className='wrapper home-page'>

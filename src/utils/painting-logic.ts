@@ -1,4 +1,6 @@
-import {coordinatesType, Node} from "./data-structures";
+import {Node} from "./data-structures";
+import {setModal} from "./store/utils-store/utils-actions";
+import {useDispatch} from "react-redux";
 
 const TIMEOUT_BETWEEN_HIGHLIGHTS = 2000
 
@@ -84,56 +86,65 @@ export const setNodeValue = (node: Node, value: number) => {
     ctx.fillText(value.toString(), node.coordinates.x, node.coordinates.y + 50, 200)
 }
 
-export const initPaintingModule = async (root: Node) => {
-    canvas = document.querySelector('#canvas')! as HTMLCanvasElement
-    ctx = canvas.getContext('2d')!
-    ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height)
+export const usePaintingModule = () => {
+    const dispatch = useDispatch()
+    return async (root: Node) => {
+        canvas = document.querySelector('#canvas')! as HTMLCanvasElement
+        ctx = canvas.getContext('2d')!
+        ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height)
 
-    const boundBox = canvas.getBoundingClientRect()
+        const boundBox = canvas.getBoundingClientRect()
 
-    let prevCollidedNode: Node | null = null
-    let collidedNode: Node | null = null
-    canvas.addEventListener('mousemove', (event) => {
-        const x = event.clientX - boundBox.left
-        const y = event.clientY - boundBox.top
+        let prevCollidedNode: Node | null = null
+        let collidedNode: Node | null = null
+        canvas.addEventListener('mousemove', (event) => {
+            const x = event.clientX - boundBox.left
+            const y = event.clientY - boundBox.top
 
-        // Check if mouse hover over a node, but do not get the collision warning a million times, just once (maybe twice :))
-        if(!prevCollidedNode && checkForCollision(x, y, root))
-            prevCollidedNode = checkForCollision(x, y, root)
-        else
-            if(checkForCollision(x, y, root)) {
+            // Check if mouse hover over a node, but do not get the collision warning a million times, just once (maybe twice :))
+            if (!prevCollidedNode && checkForCollision(x, y, root))
+                prevCollidedNode = checkForCollision(x, y, root)
+            else if (checkForCollision(x, y, root)) {
                 prevCollidedNode = collidedNode
                 collidedNode = checkForCollision(x, y, root)
             }
 
 
-        if(collidedNode !== prevCollidedNode)
-            console.log(collidedNode)
-    })
+            if (collidedNode !== prevCollidedNode)
+                console.log(collidedNode)
+        })
 
 
-    canvas.addEventListener('click', async (event) => {
-        const x = event.clientX - boundBox.left
-        const y = event.clientY - boundBox.top
+        canvas.addEventListener('click', async (event) => {
+            const x = event.clientX - boundBox.left
+            const y = event.clientY - boundBox.top
 
-        const collidedNode = checkForCollision(x, y, root)
-        if(collidedNode) {
-            await highlightNode(collidedNode)
-            // TODO: Open modal for input into the node
-            setNodeValue(collidedNode, Math.floor(Math.random() * 5 + 2))
-            return;
-        }
+            const collidedNode = checkForCollision(x, y, root)
+            if (collidedNode) {
+                highlightNode(collidedNode)
+                // TODO: Open modal for input into the node
 
-        const newNode = new Node(undefined, null, {x, y})
+                dispatch(setModal({
+                    opened: true,
+                    type: 'input',
+                    content: collidedNode
+                }))
+                // setNodeValue(collidedNode, collidedNode.value!)
+                return;
+            }
 
-        newNode.father = computeFather(newNode, root)
-        newNode.father.children.push(newNode)
+            const newNode = new Node(undefined, null, {x, y})
 
-        await paintNode(newNode, colors.regular)
-    })
+            newNode.father = computeFather(newNode, root)
+            newNode.father.children.push(newNode)
 
-    await paintTree(root)
+            await paintNode(newNode, colors.regular)
+        })
+
+        await paintTree(root)
+    }
 }
+
 
 const paintTree = async (root: Node) => {
     await paintNode(root, colors.regular)

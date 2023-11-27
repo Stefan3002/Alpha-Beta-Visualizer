@@ -2,7 +2,7 @@
 
 import {levels, Node} from "./data-structures";
 import {read} from "fs";
-import {canvasDimensions, highlightNode, initPaintingModule, paintNode, setNodeValue} from "./painting-logic";
+import {canvasDimensions, highlightNode, paintNode, setNodeValue, usePaintingModule} from "./painting-logic";
 
 
 const createDummyTree = (root: Node) => {
@@ -16,18 +16,20 @@ const createDummyTree = (root: Node) => {
     root.children[1].children.push(new Node(8, root.children[1], {x: 160, y: 40}))
 }
 
-export const initAlgo = async () => {
-    const root = new Node()
-    // createDummyTree(root)
-    await initPaintingModule(root)
+export const useMinMaxAlgo = () => {
+    const initPaintingModule = usePaintingModule()
+    return async () => {
+        const root = new Node()
+        // createDummyTree(root)
+        await initPaintingModule(root)
 
+        // await solveMinMax(root)
+        // One last time for the root we decide on the value (max level)
 
-
-    // await solveMinMax(root)
-    // One last time for the root we decide on the value (max level)
-
-    return root
+        return root
+    }
 }
+
 
 export const solveMinMaxFront = async (root: Node) => {
     await solveMinMax(root)
@@ -38,6 +40,7 @@ export const solveMinMaxFront = async (root: Node) => {
 export const solveMinMax = async (node: Node) =>{
     // Highlight the current node
     await highlightNode(node)
+    console.log('a', node)
     // Traverse all children from left to right.
     for(let i = 0 ; i < node.children.length; i++) {
         const child = node.children[i]

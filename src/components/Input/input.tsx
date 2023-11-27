@@ -1,13 +1,16 @@
 import './input.css'
-import {FC} from "react";
+import {FC, useState} from "react";
 
 type propsType = {
-    placeholder: string
+    placeholder: string,
+    value?: string
 }
 
-const Input: FC<propsType> = ({placeholder}) => {
+const Input: FC<propsType> = ({value, placeholder}) => {
+    const [inputValue, setInputValue] = useState(value)
+
     return (
-        <input placeholder={placeholder} className='input'>
+        <input value={inputValue} onChange={(newValue) => setInputValue(newValue.target.value)} placeholder={placeholder} className='input'>
 
         </input>
     )
