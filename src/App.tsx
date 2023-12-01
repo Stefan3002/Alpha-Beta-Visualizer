@@ -15,7 +15,17 @@ function App() {
     console.log(modal)
     return (
     <div className="App">
-        {modal?.opened ? <><Blur /><Modal type={modal.type} /></> : null}
+        {modal.opened ?
+            modal.type !== 'info' && modal.type !== 'comparison' ?
+            <>
+                <Blur />
+                <Modal type={modal.type} />
+            </> :
+            <>
+                <Modal type={modal.type} />
+            </>
+            :
+            null}
       <Routes>
         <Route path='' element={<HomePage />}>
 

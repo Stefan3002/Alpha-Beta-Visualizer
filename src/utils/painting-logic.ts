@@ -1,8 +1,9 @@
 import {Node} from "./data-structures";
 import {setModal} from "./store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
+import {getSettings} from "./general-logic";
 
-const TIMEOUT_BETWEEN_HIGHLIGHTS = 2000
+const settings = getSettings()
 
 enum colors {
     highlight = 'red',
@@ -111,7 +112,11 @@ export const usePaintingModule = () => {
 
 
             if (collidedNode !== prevCollidedNode)
-                console.log(collidedNode)
+                dispatch(setModal({
+                    opened: true,
+                    type: 'info',
+                    content: collidedNode!
+                }))
         })
 
 
@@ -133,16 +138,20 @@ export const usePaintingModule = () => {
                 return;
             }
 
-            const newNode = new Node(undefined, null, {x, y})
+            const dummyNode = new Node(undefined, null, {x, y})
 
-            newNode.father = computeFather(newNode, root)
-            newNode.father.children.push(newNode)
+            const father = computeFather(dummyNode, root)
+
+            const newNode = new Node(undefined, father, {x, y})
+
+            newNode.father!.children.push(newNode)
 
             await paintNode(newNode, colors.regular)
         })
 
         await paintTree(root)
     }
+
 }
 
 
@@ -151,22 +160,44 @@ const paintTree = async (root: Node) => {
     for(let child of root.children)
         await paintTree(child)
 }
+
+const drawCircle = (centerX: number, centerY: number, drawAngle: number = 0) => {
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath()
+    // ctx.moveTo(drawX, drawY)
+    ctx.arc(centerX, centerY, NODE_RADIUS, 0, drawAngle)
+    ctx.stroke()
+
+    drawAngle += settings.draw_speed
+    if(drawAngle < 2 * Math.PI)
+        requestAnimationFrame(() => drawCircle(centerX , centerY, drawAngle))
+}
+
+const drawLine = (x: number, y: number) => {
+    // ctx.beginPath()
+    ctx.lineTo(x, y)
+    ctx.stroke()
+}
 export const paintNode = async (node: Node, color: colors) => {
     const {x, y} = node.coordinates
     // Make the circle
     ctx.beginPath()
     ctx.strokeStyle = color
     // color === colors.highlight ? ctx.lineWidth = 8 : ctx.lineWidth = 1
-    ctx.moveTo(x, y)
-    ctx.arc(x, y, NODE_RADIUS, 0, 2 * Math.PI)
-    ctx.stroke()
+    // ctx.moveTo(x + NODE_RADIUS, y)
+    // ctx.arc(x, y, NODE_RADIUS, 0, 2 * Math.PI)
+
+    drawCircle(x, y)
+
+    // ctx.stroke()
     // ctx.fill()
 
 //     Connect it to its father
+//     drawLine()
     ctx.moveTo(x, y)
     ctx.lineWidth = 1
-    ctx.lineTo(node.father?.coordinates.x as number, node.father?.coordinates.y as number)
-    ctx.stroke()
+    drawLine(node.father?.coordinates.x as number, node.father?.coordinates.y as number)
+
 }
 
 export const highlightNode = async (node: Node) => {
@@ -176,7 +207,7 @@ export const highlightNode = async (node: Node) => {
 
     await paintNode(node, colors.highlight)
 
-    await waitOnPainting(TIMEOUT_BETWEEN_HIGHLIGHTS)
+    await waitOnPainting(settings.delay)
 
     await paintNode(node, colors.regular)
     node.highlighted = false

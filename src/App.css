@@ -18,4 +18,8 @@ input, button, option {
   margin: 0 auto;
 }
 
+.icon-svg {
+  max-width: 40px;
+}
+
 /*# sourceMappingURL=App.css.map */

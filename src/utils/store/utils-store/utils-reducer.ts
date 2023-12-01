@@ -17,7 +17,7 @@ type actionType = {
     }
 }
 
-export const utilsReducer = (action: actionType, state = INITIAL_VALUE) => {
+export const utilsReducer = (state = INITIAL_VALUE, action: actionType) => {
     if(!action)
         return state
     const {type, payload} = action

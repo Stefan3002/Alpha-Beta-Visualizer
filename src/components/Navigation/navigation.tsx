@@ -1,7 +1,7 @@
 import './navigation.css'
 import Button from "../Button/button";
 import {solveMinMaxFront, useMinMaxAlgo} from "../../utils/min-max-logic";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Node} from "../../utils/data-structures";
 import {setModal} from "../../utils/store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
@@ -15,8 +15,20 @@ const Navigation = () => {
             rootNode.current = root
         })()
     }, [])
+    const [info, setInfo] = useState('')
+
+    useEffect(() => {
+        if(info)
+            dispatch(setModal({
+                type: 'comparison',
+                opened: true,
+                content: info
+            }))
+    }, [info])
+
+
     const startMinMax = async () => {
-        await solveMinMaxFront(rootNode.current)
+        await solveMinMaxFront(rootNode.current, setInfo)
     }
 
     const openSettings = () => {

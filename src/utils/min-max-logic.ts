@@ -3,6 +3,10 @@
 import {levels, Node} from "./data-structures";
 import {read} from "fs";
 import {canvasDimensions, highlightNode, paintNode, setNodeValue, usePaintingModule} from "./painting-logic";
+import {useDispatch, useSelector} from "react-redux";
+import {setModal} from "./store/utils-store/utils-actions";
+import {getModal} from "./store/utils-store/utils-selectors";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 
 
 const createDummyTree = (root: Node) => {
@@ -18,6 +22,9 @@ const createDummyTree = (root: Node) => {
 
 export const useMinMaxAlgo = () => {
     const initPaintingModule = usePaintingModule()
+    const dispatch = useDispatch()
+    const modal = useSelector(getModal)
+
     return async () => {
         const root = new Node()
         // createDummyTree(root)
@@ -31,29 +38,33 @@ export const useMinMaxAlgo = () => {
 }
 
 
-export const solveMinMaxFront = async (root: Node) => {
-    await solveMinMax(root)
-    const [_, decision] = readyToDecide(root)
+export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<SetStateAction<string>>) => {
+    await solveMinMax(root, setInfoCallback)
+    const [_, decision] = await readyToDecide(root, setInfoCallback)
     setNodeValue(root, decision)
 }
 
-export const solveMinMax = async (node: Node) =>{
+export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>) =>{
     // Highlight the current node
     await highlightNode(node)
-    console.log('a', node)
+    // console.log('a', node)
+    const [ready, decision] = await readyToDecide(node, setInfoCallback)
+    if(ready)
+        setNodeValue(node, decision)
     // Traverse all children from left to right.
-    for(let i = 0 ; i < node.children.length; i++) {
-        const child = node.children[i]
-        const [ready, decision] = readyToDecide(node)
-        if(ready)
-            setNodeValue(node, decision)
-        // If I could node decide on the value, I go down more.
-        if(!ready)
-            await solveMinMax(child)
-    }
+    if(!ready)
+        for(let i = 0 ; i < node.children.length; i++) {
+            const child = node.children[i]
+            await solveMinMax(child, setInfoCallback)
+        }
+    // Verify AGAIN! as some children have been modified!!!
+    const [ready2, decision2] = await readyToDecide(node, setInfoCallback)
+    await highlightNode(node)
+    if(ready2)
+        setNodeValue(node, decision2)
 }
 
-const readyToDecide = (node: Node): [boolean, number] => {
+const readyToDecide = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>): Promise<[boolean, number]> => {
     let ready = true
     let decision: number
 
@@ -64,11 +75,13 @@ const readyToDecide = (node: Node): [boolean, number] => {
 
     // Traverse all children from left to right.
     for(let child of node.children) {
+        await highlightNode(child)
         // All children must have filled in values.
         if (child.value === undefined) {
             ready = false
             break
         }
+        setInfoCallback(`${child.value} ? ${decision}`)
     //     Also compute the decision itself while we are at it.
         if(node.level === levels.min) {
             if (child.value < decision)

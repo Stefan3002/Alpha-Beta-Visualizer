@@ -58,7 +58,7 @@ export class Node implements NodeI{
                 this.level = levels.min
             else
                 // This means that the previous level was a min level
-                this.level = levels.min
+                this.level = levels.max
 
         // Decide on the leaf status of the father
         if(this.father)
