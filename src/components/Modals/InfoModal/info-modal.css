@@ -1,0 +1,13 @@
+.piece-info {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.info-modal .modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/*# sourceMappingURL=info-modal.css.map */
