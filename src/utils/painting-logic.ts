@@ -5,9 +5,11 @@ import {getSettings} from "./general-logic";
 
 const settings = getSettings()
 
-enum colors {
+export enum colors {
     highlight = 'red',
-    regular = 'black'
+    regular = 'black',
+    white = 'white',
+    comparison = 'green'
 }
 export const canvasDimensions = {
     width: 500,
@@ -146,7 +148,7 @@ export const usePaintingModule = () => {
 
             newNode.father!.children.push(newNode)
 
-            await paintNode(newNode, colors.regular)
+            await paintNode(newNode, colors.regular, NODE_RADIUS)
         })
 
         await paintTree(root)
@@ -156,12 +158,12 @@ export const usePaintingModule = () => {
 
 
 const paintTree = async (root: Node) => {
-    await paintNode(root, colors.regular)
+    await paintNode(root, colors.regular, NODE_RADIUS)
     for(let child of root.children)
         await paintTree(child)
 }
 
-const drawCircle = (centerX: number, centerY: number, drawAngle: number = 0) => {
+const drawCircle = (centerX: number, centerY: number, NODE_RADIUS: number, drawAngle: number = 0) => {
     // ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath()
     // ctx.moveTo(drawX, drawY)
@@ -170,7 +172,7 @@ const drawCircle = (centerX: number, centerY: number, drawAngle: number = 0) => 
 
     drawAngle += settings.draw_speed
     if(drawAngle < 2 * Math.PI)
-        requestAnimationFrame(() => drawCircle(centerX , centerY, drawAngle))
+        requestAnimationFrame(() => drawCircle(centerX , centerY, NODE_RADIUS, drawAngle))
 }
 
 const drawLine = (x: number, y: number) => {
@@ -178,7 +180,7 @@ const drawLine = (x: number, y: number) => {
     ctx.lineTo(x, y)
     ctx.stroke()
 }
-export const paintNode = async (node: Node, color: colors) => {
+export const paintNode = async (node: Node, color: colors, NODE_RADIUS: number) => {
     const {x, y} = node.coordinates
     // Make the circle
     ctx.beginPath()
@@ -187,7 +189,7 @@ export const paintNode = async (node: Node, color: colors) => {
     // ctx.moveTo(x + NODE_RADIUS, y)
     // ctx.arc(x, y, NODE_RADIUS, 0, 2 * Math.PI)
 
-    drawCircle(x, y)
+    drawCircle(x, y, NODE_RADIUS)
 
     // ctx.stroke()
     // ctx.fill()
@@ -195,20 +197,33 @@ export const paintNode = async (node: Node, color: colors) => {
 //     Connect it to its father
 //     drawLine()
     ctx.moveTo(x, y)
-    ctx.lineWidth = 1
+    if(color === colors.comparison)
+        ctx.lineWidth = 3
+    else
+        ctx.lineWidth = 1
     drawLine(node.father?.coordinates.x as number, node.father?.coordinates.y as number)
-
+    ctx.lineWidth = 1
 }
 
-export const highlightNode = async (node: Node) => {
+export const highlightNode = async (node: Node, color?: colors) => {
     node.highlighted = true
     const coordinates = node.coordinates
     const {x, y} = coordinates
 
-    await paintNode(node, colors.highlight)
+    await paintNode(node, color ? color : colors.highlight, NODE_RADIUS)
+    // Double the current node!
+    await paintNode(node, color ? color : colors.highlight, NODE_RADIUS + 5)
 
     await waitOnPainting(settings.delay)
 
-    await paintNode(node, colors.regular)
+    if(color === colors.comparison)
+        return;
+
+    await paintNode(node, colors.white, NODE_RADIUS + 5)
+
+    await paintNode(node, color ? color : colors.regular, NODE_RADIUS)
+
+
+
     node.highlighted = false
 }

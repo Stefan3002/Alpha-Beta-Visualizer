@@ -2,11 +2,14 @@
 
 import {levels, Node} from "./data-structures";
 import {read} from "fs";
-import {canvasDimensions, highlightNode, paintNode, setNodeValue, usePaintingModule} from "./painting-logic";
+import {canvasDimensions, colors, highlightNode, paintNode, setNodeValue, usePaintingModule} from "./painting-logic";
 import {useDispatch, useSelector} from "react-redux";
 import {setModal} from "./store/utils-store/utils-actions";
 import {getModal} from "./store/utils-store/utils-selectors";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {inspect} from "util";
+
+
 
 
 const createDummyTree = (root: Node) => {
@@ -40,7 +43,7 @@ export const useMinMaxAlgo = () => {
 
 export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<SetStateAction<string>>) => {
     await solveMinMax(root, setInfoCallback)
-    const [_, decision] = await readyToDecide(root, setInfoCallback)
+    const [decision, _] = await getDecision(root, setInfoCallback)
     setNodeValue(root, decision)
 }
 
@@ -48,9 +51,13 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
     // Highlight the current node
     await highlightNode(node)
     // console.log('a', node)
-    const [ready, decision] = await readyToDecide(node, setInfoCallback)
-    if(ready)
+    const ready = await readyToDecide(node, setInfoCallback)
+    if(ready) {
+        const [decision, target] = await getDecision(node, setInfoCallback)
+        await highlightNode(node, colors.comparison)
+        await highlightNode(target, colors.comparison)
         setNodeValue(node, decision)
+    }
     // Traverse all children from left to right.
     if(!ready)
         for(let i = 0 ; i < node.children.length; i++) {
@@ -58,15 +65,39 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
             await solveMinMax(child, setInfoCallback)
         }
     // Verify AGAIN! as some children have been modified!!!
-    const [ready2, decision2] = await readyToDecide(node, setInfoCallback)
-    await highlightNode(node)
-    if(ready2)
+    // GUARD
+    if(node.value)
+        return;
+
+    const ready2 = await readyToDecide(node, setInfoCallback)
+
+    if(ready2) {
+        const [decision2, _] = await getDecision(node, setInfoCallback)
+        await highlightNode(node)
         setNodeValue(node, decision2)
+        await highlightNode(node, colors.comparison)
+        // await highlightNode(target2, colors.comparison)
+    }
 }
 
-const readyToDecide = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>): Promise<[boolean, number]> => {
+const readyToDecide = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>): Promise<boolean> => {
     let ready = true
+
+    // Traverse all children from left to right.
+    for(let child of node.children) {
+        // await highlightNode(child)
+        // All children must have filled in values.
+        if (child.value === undefined) {
+            ready = false
+            break
+        }
+    }
+    return ready
+}
+
+const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>): Promise<[number, Node]> => {
     let decision: number
+    let target: Node = new Node()
 
     if(node.level === levels.min)
         decision = Infinity
@@ -76,23 +107,24 @@ const readyToDecide = async (node: Node, setInfoCallback: Dispatch<SetStateActio
     // Traverse all children from left to right.
     for(let child of node.children) {
         await highlightNode(child)
-        // All children must have filled in values.
-        if (child.value === undefined) {
-            ready = false
-            break
-        }
+
         setInfoCallback(`${child.value} ? ${decision}`)
-    //     Also compute the decision itself while we are at it.
+        await highlightNode(child, colors.comparison)
+        //    Compute the decision itself.
         if(node.level === levels.min) {
-            if (child.value < decision)
-                decision = child.value
+            if (child.value! < decision) {
+                target = child
+                decision = child.value!
+            }
         }
         else
-            if (child.value > decision)
-                decision = child.value
+        if (child.value! > decision) {
+            target = child
+            decision = child.value!
+        }
 
     }
-    return [ready, decision]
+    return [decision, target]
 }
 
 

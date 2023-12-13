@@ -5,6 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import {Node} from "../../utils/data-structures";
 import {setModal} from "../../utils/store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
+import QuestionSVG from '../../utils/imgs/svgs/QuestionSVG.svg'
 const Navigation = () => {
     const rootNode = useRef<Node>(new Node())
     const dispatch = useDispatch()
@@ -48,8 +49,20 @@ const Navigation = () => {
                 <li>Alpha Beta Pruning</li>
                 <li>Expecti-Max</li>
             </ul>
-            <Button callback={openSettings} text='Settings' />
-            <Button callback={startMinMax} text='Start' />
+            <div className="nav-buttons">
+                <Button callback={openSettings} text='Settings' />
+                <Button callback={startMinMax} text='Start' />
+                <img onClick={() => {
+                    dispatch(setModal({
+                            opened: true,
+                            type: 'info',
+                            content: {
+                                info: 'How does this work?'
+                            }
+                        }
+                    ))
+                }} src={QuestionSVG} className='icon-svg' alt=""/>
+            </div>
         </nav>
     )
 }

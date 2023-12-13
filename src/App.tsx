@@ -22,6 +22,7 @@ function App() {
                 <Modal type={modal.type} />
             </> :
             <>
+                {modal?.content?.info ? <Blur /> : null}
                 <Modal type={modal.type} />
             </>
             :

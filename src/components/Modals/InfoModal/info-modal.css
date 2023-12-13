@@ -9,5 +9,15 @@
   align-items: center;
   gap: 0.5rem;
 }
+.info-modal .works-modal-content {
+  text-align: center;
+}
+
+.info-modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
 
 /*# sourceMappingURL=info-modal.css.map */
