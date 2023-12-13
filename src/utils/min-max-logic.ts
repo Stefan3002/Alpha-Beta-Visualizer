@@ -2,13 +2,22 @@
 
 import {levels, Node} from "./data-structures";
 import {read} from "fs";
-import {canvasDimensions, colors, highlightNode, paintNode, setNodeValue, usePaintingModule} from "./painting-logic";
+import {
+    canvasDimensions,
+    colors,
+    highlightNode,
+    paintNode,
+    setNodeValue,
+    usePaintingModule,
+    waitOnPainting
+} from "./painting-logic";
 import {useDispatch, useSelector} from "react-redux";
 import {setModal} from "./store/utils-store/utils-actions";
 import {getModal} from "./store/utils-store/utils-selectors";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {inspect} from "util";
-
+import {getSettings, waitOnUser} from "./general-logic";
+const SETTINGS = getSettings()
 
 
 
@@ -57,6 +66,9 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
         await highlightNode(node, colors.comparison)
         await highlightNode(target, colors.comparison)
         setNodeValue(node, decision)
+        if(SETTINGS.waitOnUser)
+            await waitOnUser()
+
     }
     // Traverse all children from left to right.
     if(!ready)
@@ -76,6 +88,9 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
         await highlightNode(node)
         setNodeValue(node, decision2)
         await highlightNode(node, colors.comparison)
+        if(SETTINGS.waitOnUser)
+            await waitOnUser()
+
         // await highlightNode(target2, colors.comparison)
     }
 }

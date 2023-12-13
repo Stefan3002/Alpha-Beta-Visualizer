@@ -63,6 +63,7 @@ const Navigation = () => {
                     ))
                 }} src={QuestionSVG} className='icon-svg' alt=""/>
             </div>
+            <p className='continue'>Next step</p>
         </nav>
     )
 }

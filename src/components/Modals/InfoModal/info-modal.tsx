@@ -8,10 +8,11 @@ import LevelSVG from '../../../utils/imgs/svgs/LevelSVG.svg'
 import LeafSVG from '../../../utils/imgs/svgs/LeafSVG.svg'
 import CloseSVG from '../../../utils/imgs/svgs/CloseSVG.svg'
 import {setModal} from "../../../utils/store/utils-store/utils-actions";
+import {getSettings} from "../../../utils/general-logic";
 const InfoModal = () => {
     const dispatch = useDispatch()
     const nodeInfo = useSelector(getModal).content
-
+    const settings = getSettings()
     const closeModals = () => {
         dispatch(setModal({
             opened: false,

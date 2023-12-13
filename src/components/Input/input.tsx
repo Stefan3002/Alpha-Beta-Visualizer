@@ -5,7 +5,7 @@ import {getSettings, setSettings} from "../../utils/general-logic";
 type propsType = {
     placeholder: string,
     value?: string,
-    type?: 'text' | 'slider'
+    type?: 'text' | 'slider' | 'checkbox'
 }
 
 const Input: FC<propsType> = ({type = 'text', value, placeholder}) => {
@@ -17,6 +17,13 @@ const Input: FC<propsType> = ({type = 'text', value, placeholder}) => {
         setSettings({...oldSettings, delay: inputValue ? +inputValue : 700})
     }
 
+
+    const changeWaitOnUser = (event: ChangeEvent<HTMLInputElement>) => {
+        const waitOnUser = event.target.checked
+        const oldSettings = getSettings()
+        setSettings({...oldSettings, waitOnUser})
+
+    }
 
     if(type === 'text')
         return (
@@ -36,6 +43,17 @@ const Input: FC<propsType> = ({type = 'text', value, placeholder}) => {
                 </div>
 
             )
+    else
+    if(type === 'checkbox')
+        return (
+            <div className='slider-input'>
+                <p>{placeholder}</p>
+                <input value={inputValue} onChange={changeWaitOnUser} type='checkbox'>
+
+                </input>
+            </div>
+
+        )
     else
         return <></>
 }

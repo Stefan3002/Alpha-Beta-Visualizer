@@ -13,6 +13,7 @@ const SettingsModal = () => {
             </div>
             <div className="modal-content">
                 <Input value='700' type='slider' placeholder='Delay'/>
+                <Input value='700' type='checkbox' placeholder='Stop at important steps?'/>
             </div>
         </div>
     )

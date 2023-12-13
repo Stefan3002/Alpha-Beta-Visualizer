@@ -7,12 +7,13 @@ import {useSelector} from "react-redux";
 import {getModal} from "./utils/store/utils-store/utils-selectors";
 import Modal from "./components/Modals/Modal/modal";
 import Blur from "./components/Blur/blur";
+import {getSettings} from "./utils/general-logic";
 
 function App() {
 
     const modal = useSelector(getModal)
+    const settings = getSettings()
 
-    console.log(modal)
     return (
     <div className="App">
         {modal.opened ?
@@ -22,7 +23,7 @@ function App() {
                 <Modal type={modal.type} />
             </> :
             <>
-                {modal?.content?.info ? <Blur /> : null}
+                {modal?.content?.info || settings.waitOnUser ? <Blur /> : null}
                 <Modal type={modal.type} />
             </>
             :
