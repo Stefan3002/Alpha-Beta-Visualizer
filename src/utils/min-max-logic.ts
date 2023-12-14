@@ -1,22 +1,13 @@
 // The logic for the MinMax algorithm.
 
-import {levels, Node} from "./data-structures";
-import {read} from "fs";
-import {
-    canvasDimensions,
-    colors,
-    highlightNode,
-    paintNode,
-    setNodeValue,
-    usePaintingModule,
-    waitOnPainting
-} from "./painting-logic";
+
+import {levels, Node, stepDataType} from "./data-structures";
+import {canvasDimensions, colors, highlightNode, setNodeValue, usePaintingModule} from "./painting-logic";
 import {useDispatch, useSelector} from "react-redux";
-import {setModal} from "./store/utils-store/utils-actions";
 import {getModal} from "./store/utils-store/utils-selectors";
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {inspect} from "util";
+import {Dispatch, SetStateAction} from "react";
 import {getSettings, waitOnUser} from "./general-logic";
+
 const SETTINGS = getSettings()
 
 
@@ -50,17 +41,17 @@ export const useMinMaxAlgo = () => {
 }
 
 
-export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<SetStateAction<string>>) => {
+export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<SetStateAction<stepDataType>>) => {
     await solveMinMax(root, setInfoCallback)
     const [decision, _] = await getDecision(root, setInfoCallback)
     setNodeValue(root, decision)
 }
 
-export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>) =>{
+export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetStateAction<stepDataType>>) =>{
     // Highlight the current node
     await highlightNode(node)
-    // console.log('a', node)
-    const ready = await readyToDecide(node, setInfoCallback)
+    console.log('a', node)
+    const ready = await readyToDecide(node)
     if(ready) {
         const [decision, target] = await getDecision(node, setInfoCallback)
         await highlightNode(node, colors.comparison)
@@ -68,7 +59,7 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
         setNodeValue(node, decision)
         if(SETTINGS.waitOnUser)
             await waitOnUser()
-
+        return;
     }
     // Traverse all children from left to right.
     if(!ready)
@@ -78,10 +69,10 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
         }
     // Verify AGAIN! as some children have been modified!!!
     // GUARD
-    if(node.value)
+    if(node.value !== undefined)
         return;
-
-    const ready2 = await readyToDecide(node, setInfoCallback)
+    console.log(node)
+    const ready2 = await readyToDecide(node)
 
     if(ready2) {
         const [decision2, _] = await getDecision(node, setInfoCallback)
@@ -95,7 +86,7 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
     }
 }
 
-const readyToDecide = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>): Promise<boolean> => {
+const readyToDecide = async (node: Node): Promise<boolean> => {
     let ready = true
 
     // Traverse all children from left to right.
@@ -110,7 +101,7 @@ const readyToDecide = async (node: Node, setInfoCallback: Dispatch<SetStateActio
     return ready
 }
 
-const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<string>>): Promise<[number, Node]> => {
+const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<stepDataType>>): Promise<[number, Node]> => {
     let decision: number
     let target: Node = new Node()
 
@@ -121,10 +112,16 @@ const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<
 
     // Traverse all children from left to right.
     for(let child of node.children) {
-        await highlightNode(child)
-
-        setInfoCallback(`${child.value} ? ${decision}`)
+        // await highlightNode(child)
         await highlightNode(child, colors.comparison)
+        setInfoCallback({
+            value: `${child.value} ? ${decision}`,
+            level: node.level,
+            father: node,
+            node: child
+        })
+        if(SETTINGS.waitOnUser)
+            await waitOnUser()
         //    Compute the decision itself.
         if(node.level === levels.min) {
             if (child.value! < decision) {
@@ -139,6 +136,7 @@ const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<
         }
 
     }
+    console.log('decision:', decision)
     return [decision, target]
 }
 

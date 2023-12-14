@@ -2,7 +2,7 @@ import './navigation.css'
 import Button from "../Button/button";
 import {solveMinMaxFront, useMinMaxAlgo} from "../../utils/min-max-logic";
 import {useEffect, useRef, useState} from "react";
-import {Node} from "../../utils/data-structures";
+import {levels, Node, stepDataType} from "../../utils/data-structures";
 import {setModal} from "../../utils/store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
 import QuestionSVG from '../../utils/imgs/svgs/QuestionSVG.svg'
@@ -16,7 +16,7 @@ const Navigation = () => {
             rootNode.current = root
         })()
     }, [])
-    const [info, setInfo] = useState('')
+    const [info, setInfo] = useState<stepDataType>(null)
 
     useEffect(() => {
         if(info)

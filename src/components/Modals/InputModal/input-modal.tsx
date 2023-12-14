@@ -13,8 +13,7 @@ const InputModal = () => {
         event.preventDefault()
         // @ts-ignore
         const value = event.target[0].value
-        console.log(value)
-        setNodeValue(modalContent, value)
+        setNodeValue(modalContent, parseInt(value))
 
         dispatch(setModal({
             opened: false

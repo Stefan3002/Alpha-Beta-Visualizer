@@ -4,6 +4,12 @@ export enum levels {
     max = 'max',
     min = 'min'
 }
+export type stepDataType = {
+    value: string
+    level: levels
+    father: Node
+    node: Node
+} | null
 
 export type coordinatesType = {
     x: number,

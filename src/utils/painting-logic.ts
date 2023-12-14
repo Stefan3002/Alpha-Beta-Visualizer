@@ -129,8 +129,6 @@ export const usePaintingModule = () => {
             const collidedNode = checkForCollision(x, y, root)
             if (collidedNode) {
                 highlightNode(collidedNode)
-                // TODO: Open modal for input into the node
-
                 dispatch(setModal({
                     opened: true,
                     type: 'input',

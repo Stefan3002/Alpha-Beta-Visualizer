@@ -1,3 +1,21 @@
+.node-info {
+  background: #0B3954;
+  color: #BFD7EA;
+  padding: 0.5rem;
+  border-radius: 10px;
+  text-align: center;
+}
 
+.comparison-modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.comparison-group {
+  display: flex;
+  gap: 0.5rem;
+}
 
 /*# sourceMappingURL=comparison-modal.css.map */
