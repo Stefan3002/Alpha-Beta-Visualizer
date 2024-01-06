@@ -8,6 +8,7 @@ import {getModal} from "./utils/store/utils-store/utils-selectors";
 import Modal from "./components/Modals/Modal/modal";
 import Blur from "./components/Blur/blur";
 import {getSettings} from "./utils/general-logic";
+import HomePageAlphaBetaPruning from "./components/HomePageAlphaBetaPruning/home-page-alpha-beta-pruning";
 
 function App() {
 
@@ -29,9 +30,8 @@ function App() {
             :
             null}
       <Routes>
-        <Route path='' element={<HomePage />}>
-
-        </Route>
+        <Route path='' element={<HomePage />} />
+        <Route path='alpha-beta-pruning' element={<HomePageAlphaBetaPruning />} />
       </Routes>
     </div>
   );

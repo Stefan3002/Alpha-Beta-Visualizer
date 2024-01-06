@@ -6,6 +6,8 @@ import {getModal} from "../../../utils/store/utils-store/utils-selectors";
 import ValueSVG from '../../../utils/imgs/svgs/ValueSVG.svg'
 import LevelSVG from '../../../utils/imgs/svgs/LevelSVG.svg'
 import LeafSVG from '../../../utils/imgs/svgs/LeafSVG.svg'
+import AlphaSVG from '../../../utils/imgs/svgs/AlphaSVG.svg'
+import BetaSVG from '../../../utils/imgs/svgs/BetaSVG.svg'
 import CloseSVG from '../../../utils/imgs/svgs/CloseSVG.svg'
 import {setModal} from "../../../utils/store/utils-store/utils-actions";
 import {getSettings} from "../../../utils/general-logic";
@@ -42,6 +44,16 @@ const InfoModal = () => {
                     <img className='icon-svg' src={LeafSVG} alt=""/>
                     <p>{nodeInfo?.leaf ? 'true' : 'false'}</p>
                 </div>
+            </div>
+            <div className="alpha-beta-info">
+                {nodeInfo.alpha ? <div className="piece-info">
+                    <img className='icon-svg' src={AlphaSVG} alt=""/>
+                    <p>{nodeInfo?.alpha}</p>
+                </div> : null}
+                {nodeInfo.beta ? <div className="piece-info">
+                    <img className='icon-svg' src={BetaSVG} alt=""/>
+                    <p>{nodeInfo?.beta}</p>
+                </div> : null}
             </div>
         </div>
     )

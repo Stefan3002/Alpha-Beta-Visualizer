@@ -9,10 +9,9 @@
   background: white;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
-.navigation ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
+.navigation h1 {
+  font-size: 2rem;
+  text-decoration: underline;
 }
 
 .nav-buttons {
@@ -21,6 +20,21 @@
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+}
+
+.active-link {
+  color: #0B3954;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.algorithms {
+  background: #BFD7EA;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  border-radius: 10px;
+  list-style-type: none;
 }
 
 @media screen and (max-width: 1100px) {

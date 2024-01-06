@@ -8,7 +8,12 @@ export type stepDataType = {
     value: string
     level: levels
     father: Node
-    node: Node
+    node: Node | AlphaBetaNode
+} | null
+
+export type stepAlphaDataType = {
+    alpha: number,
+    beta: number
 } | null
 
 export type coordinatesType = {
@@ -70,5 +75,25 @@ export class Node implements NodeI{
         if(this.father)
             this.father.leaf = false
 
+    }
+}
+
+export class AlphaBetaNode extends Node {
+    children: AlphaBetaNode[]
+    alpha: number
+    beta: number
+    father: AlphaBetaNode | null
+    constructor(value: number | undefined = undefined, father: AlphaBetaNode | null = null, coordinates: coordinatesType =
+                    {
+                        x: canvasDimensions.width / 2,
+                        y: 0
+                    }
+        , children: AlphaBetaNode[] = [], color = 'default', highlighted = false, alpha: number = -Infinity, beta: number = Infinity) {
+        super(value, father, coordinates, children, color, highlighted);
+
+        this.alpha = alpha
+        this.beta = beta
+        this.children = children
+        this.father = father
     }
 }

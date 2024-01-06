@@ -3,11 +3,12 @@ import {FC} from "react";
 
 type propsType = {
     text: string,
-    callback?: () => {}
+    callback?: () => {},
+    classN?: string
 }
-const Button: FC<propsType> = ({text, callback = () => {}}) => {
+const Button: FC<propsType> = ({classN, text, callback = () => {}}) => {
     return (
-        <button className='button' onClick={callback}>
+        <button className={`button ${classN}`} onClick={callback}>
             {text}
         </button>
     )

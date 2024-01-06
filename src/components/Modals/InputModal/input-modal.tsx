@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getModal} from "../../../utils/store/utils-store/utils-selectors";
 import {setNodeValue} from "../../../utils/painting-logic";
 import {setModal} from "../../../utils/store/utils-store/utils-actions";
+import {setAlphaBetaNodeValue} from "../../../utils/alpha-beta-painting-logic";
 const InputModal = () => {
     const dispatch = useDispatch()
     const modalContent = useSelector(getModal).content
@@ -13,7 +14,15 @@ const InputModal = () => {
         event.preventDefault()
         // @ts-ignore
         const value = event.target[0].value
-        setNodeValue(modalContent, parseInt(value))
+        switch (window.location.pathname) {
+            case '/':
+                setNodeValue(modalContent, parseInt(value))
+                break
+            case '/alpha-beta-pruning':
+                setAlphaBetaNodeValue(modalContent, parseInt(value))
+                break
+        }
+
 
         dispatch(setModal({
             opened: false

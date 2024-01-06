@@ -20,4 +20,11 @@
   gap: 0.5rem;
 }
 
+.alpha-beta-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 /*# sourceMappingURL=info-modal.css.map */
