@@ -1,7 +1,8 @@
 import {AlphaBetaNode} from "./data-structures";
-import {setModal} from "./store/utils-store/utils-actions";
+import {setInfoModal, setModal} from "./store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
 import {getSettings} from "./general-logic";
+import {runningAlphaBeta} from "./alpha-beta-logic";
 
 const settings = getSettings()
 
@@ -114,15 +115,16 @@ export const useAlphaBetaPaintingModule = () => {
 
 
             if (collidedNode !== prevCollidedNode)
-                dispatch(setModal({
+                dispatch(setInfoModal({
                     opened: true,
-                    type: 'info',
                     content: collidedNode!
                 }))
         })
 
 
         canvas.addEventListener('click', async (event) => {
+            if(runningAlphaBeta)
+                return;
             const x = event.clientX - boundBox.left
             const y = event.clientY - boundBox.top
 

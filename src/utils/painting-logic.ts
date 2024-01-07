@@ -130,6 +130,10 @@ export const usePaintingModule = () => {
 
             const collidedNode = checkForCollision(x, y, root)
             if (collidedNode) {
+                // Check if it is a leaf!
+                if(!collidedNode.leaf)
+                    return;
+                // Now it is a leaf for sure!
                 highlightNode(collidedNode)
                 dispatch(setModal({
                     opened: true,
@@ -143,6 +147,14 @@ export const usePaintingModule = () => {
             const dummyNode = new Node(undefined, null, {x, y})
 
             const father = computeFather(dummyNode, root)
+
+
+            // TODO: Check if the father had a set value
+            // The user should not be able to add a leaf after a node
+            // with a set value!
+
+            // if(father.value !== undefined)
+            //     return;
 
             const newNode = new Node(undefined, father, {x, y})
 

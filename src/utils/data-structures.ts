@@ -50,7 +50,7 @@ export class Node implements NodeI{
     constructor(value: number | undefined = undefined, father: Node | null = null, coordinates: coordinatesType =
         {
             x: canvasDimensions.width / 2,
-            y: 0
+            y: 30
         }
         , children: Node[] = [], color = 'default', highlighted = false) {
         this.children = children

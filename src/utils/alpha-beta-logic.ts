@@ -8,9 +8,10 @@ import {getModal} from "./store/utils-store/utils-selectors";
 import {Dispatch, SetStateAction} from "react";
 import {getSettings, waitOnUser} from "./general-logic";
 import {highlightAlphaBetaNode, useAlphaBetaPaintingModule} from "./alpha-beta-painting-logic";
+import {running} from "./min-max-logic";
 
 const SETTINGS = getSettings()
-
+export let runningAlphaBeta = false
 
 
 const createDummyTree = (root: AlphaBetaNode) => {
@@ -42,6 +43,7 @@ export const useAlphaBetaAlgo = () => {
 }
 
 export const solveAlphaBetaFront = async ( root: AlphaBetaNode, setInfoCallback: Dispatch<SetStateAction<stepDataType>>, setAlphaInfoCallback: Dispatch<SetStateAction<stepAlphaDataType>>) => {
+    runningAlphaBeta = true
     await solveAlphaBeta( root, setInfoCallback, setAlphaInfoCallback)
     const prune = await getDecision( root, setInfoCallback, setAlphaInfoCallback)
     // setAlphaBetaNodeValue(root, decision)
@@ -69,7 +71,9 @@ export const solveAlphaBeta = async (node: AlphaBetaNode, setInfoCallback: Dispa
             child.beta = node.beta
             child.alpha = node.alpha
             await solveAlphaBeta(child, setInfoCallback, setAlphaInfoCallback)
-
+            const ready = await readyToDecide(node)
+            if(ready)
+                break
         }
 
     }
