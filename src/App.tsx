@@ -4,7 +4,7 @@ import './App.css';
 import {Route, Routes} from "react-router";
 import HomePage from "./components/HomePage/home-page";
 import {useSelector} from "react-redux";
-import {getModal} from "./utils/store/utils-store/utils-selectors";
+import {getInfoModal, getModal} from "./utils/store/utils-store/utils-selectors";
 import Modal from "./components/Modals/Modal/modal";
 import Blur from "./components/Blur/blur";
 import {getSettings} from "./utils/general-logic";
@@ -13,8 +13,9 @@ import HomePageAlphaBetaPruning from "./components/HomePageAlphaBetaPruning/home
 function App() {
 
     const modal = useSelector(getModal)
+    const modalInfo = useSelector(getInfoModal)
     const settings = getSettings()
-
+    console.log('asd', modalInfo.opened)
     return (
     <div className="App">
         {modal.opened ?
@@ -29,6 +30,10 @@ function App() {
             </>
             :
             null}
+
+        {modalInfo?.content?.info ? <Blur /> : null}
+        {modalInfo?.opened ? <Modal type='info' /> : null}
+
       <Routes>
         <Route path='' element={<HomePage />} />
         <Route path='alpha-beta-pruning' element={<HomePageAlphaBetaPruning />} />

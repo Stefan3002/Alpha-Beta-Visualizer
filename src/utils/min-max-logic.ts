@@ -1,6 +1,5 @@
 // The logic for the MinMax algorithm.
 
-
 import {levels, Node, stepDataType} from "./data-structures";
 import {canvasDimensions, colors, highlightNode, setNodeValue, usePaintingModule} from "./painting-logic";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,6 +9,7 @@ import {getSettings, waitOnUser} from "./general-logic";
 
 const SETTINGS = getSettings()
 
+export let running = false
 
 
 const createDummyTree = (root: Node) => {
@@ -42,6 +42,7 @@ export const useMinMaxAlgo = () => {
 
 
 export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<SetStateAction<stepDataType>>) => {
+    running = true
     await solveMinMax(root, setInfoCallback)
     const [decision, _] = await getDecision(root, setInfoCallback)
     setNodeValue(root, decision)
@@ -50,7 +51,6 @@ export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<Set
 export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetStateAction<stepDataType>>) =>{
     // Highlight the current node
     await highlightNode(node)
-    console.log('a', node)
     const ready = await readyToDecide(node)
     if(ready) {
         const [decision, target] = await getDecision(node, setInfoCallback)
@@ -66,12 +66,16 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
         for(let i = 0 ; i < node.children.length; i++) {
             const child = node.children[i]
             await solveMinMax(child, setInfoCallback)
+            // Maybe now all the children have a set value
+            // break if so, no need to go to children with set values
+            if(await readyToDecide(node))
+                break
         }
     // Verify AGAIN! as some children have been modified!!!
     // GUARD
     if(node.value !== undefined)
         return;
-    console.log(node)
+
     const ready2 = await readyToDecide(node)
 
     if(ready2) {
@@ -115,7 +119,7 @@ const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<
         // await highlightNode(child)
         await highlightNode(child, colors.comparison)
         setInfoCallback({
-            value: `${child.value} ? ${decision}`,
+            value: `${child.value} ? ${node.value}`,
             level: node.level,
             father: node,
             node: child
@@ -134,9 +138,26 @@ const getDecision = async (node: Node, setInfoCallback: Dispatch<SetStateAction<
             target = child
             decision = child.value!
         }
+    //     To keep the algo correct (VERY correct, text-book correct)
+    //     you would actually compare the node with his children one by one
+    //     and take any intermediary value that is bigger / smaller than the current node value
+    //     not do max / min for the children
+    //     so we will put the intermediary value in the father (current node)
+
+        if(node.value === undefined)
+            node.value = decision
+        else
+            if(node.level === levels.min) {
+                if (decision < node.value)
+                    node.value = decision
+            }
+            else
+                if(decision > node.value)
+                    node.value = decision
+
 
     }
-    console.log('decision:', decision)
+
     return [decision, target]
 }
 

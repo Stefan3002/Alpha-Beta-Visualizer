@@ -1,7 +1,8 @@
 import {Node} from "./data-structures";
-import {setModal} from "./store/utils-store/utils-actions";
+import {setInfoModal, setModal} from "./store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
 import {getSettings} from "./general-logic";
+import {running} from "./min-max-logic";
 
 const settings = getSettings()
 
@@ -114,15 +115,16 @@ export const usePaintingModule = () => {
 
 
             if (collidedNode !== prevCollidedNode)
-                dispatch(setModal({
+                dispatch(setInfoModal({
                     opened: true,
-                    type: 'info',
                     content: collidedNode!
                 }))
         })
 
 
         canvas.addEventListener('click', async (event) => {
+            if(running)
+                return;
             const x = event.clientX - boundBox.left
             const y = event.clientY - boundBox.top
 

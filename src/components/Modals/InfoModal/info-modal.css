@@ -3,6 +3,14 @@
   gap: 0.1rem;
 }
 
+.info-modal {
+  bottom: 10px;
+  top: unset;
+  left: 50%;
+  transform: translateX(-50%);
+  right: unset;
+  height: 23dvh;
+}
 .info-modal .modal-content {
   display: flex;
   justify-content: center;

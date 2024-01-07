@@ -2,18 +2,28 @@ import './comparison-modal.css'
 import ValueSVG from "../../../utils/imgs/svgs/ValueSVG.svg";
 import LevelSVG from "../../../utils/imgs/svgs/LevelSVG.svg";
 import NodeSVG from "../../../utils/imgs/svgs/NodeSVG.svg";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getModal} from "../../../utils/store/utils-store/utils-selectors";
 import AlphaSVG from "../../../utils/imgs/svgs/AlphaSVG.svg";
 import BetaSVG from "../../../utils/imgs/svgs/BetaSVG.svg";
+import CloseSVG from "../../../utils/imgs/svgs/CloseSVG.svg";
+import {setInfoModal, setModal} from "../../../utils/store/utils-store/utils-actions";
 const ComparisonModal = () => {
-
+    const dispatch = useDispatch()
     const data = useSelector(getModal).content
+    const closeModals = () => {
+        dispatch(setModal({
+            opened: false,
+            type: undefined,
+            content: undefined
+        }))
+    }
 
     return (
-        <div className='modal info-modal'>
+        <div className='modal comparison-modal'>
             <div className="modal-header">
                 <h2>Algorithm Step</h2>
+                <img className='icon-svg' onClick={closeModals} src={CloseSVG} />
             </div>
             <div className="modal-content comparison-modal-content">
                 <div className='comparison-group'>

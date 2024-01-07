@@ -16,3 +16,19 @@ export const setModal = (payload: {
     }
 }
 
+
+export const setInfoModal = (payload: {
+    opened: boolean,
+    content?: string | Node | {
+        info: string
+    } | {
+        value: string,
+        level: levels
+    },
+}) => {
+    return {
+        type: 'SET_INFO_MODAL',
+        payload
+    }
+}
+

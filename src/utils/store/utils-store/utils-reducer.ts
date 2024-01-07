@@ -5,6 +5,10 @@ const INITIAL_VALUE = {
         opened: false,
         type: '',
         content: undefined
+    },
+    infoModal: {
+        opened: false,
+        content: undefined
     }
 }
 
@@ -13,6 +17,12 @@ type actionType = {
     payload: {
         opened: boolean
         type?: string,
+        content: string | undefined | Node
+    }
+} | {
+    type: 'SET_INFO_MODAL'
+    payload: {
+        opened: boolean
         content: string | undefined | Node
     }
 }
@@ -26,6 +36,11 @@ export const utilsReducer = (state = INITIAL_VALUE, action: actionType) => {
             return {
                 ...state,
                 modal: payload
+            }
+        case 'SET_INFO_MODAL':
+            return {
+                ...state,
+                infoModal: payload
             }
         default:
             return state

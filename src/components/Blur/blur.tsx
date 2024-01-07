@@ -1,6 +1,6 @@
 import './blur.css'
 import {useDispatch} from "react-redux";
-import {setModal} from "../../utils/store/utils-store/utils-actions";
+import {setInfoModal, setModal} from "../../utils/store/utils-store/utils-actions";
 const Blur = () => {
     const dispatch = useDispatch()
     const closeModals = () => {
@@ -9,6 +9,10 @@ const Blur = () => {
             type: undefined,
             content: undefined
         }))
+        // dispatch(setInfoModal({
+        //     opened: false,
+        //     content: undefined
+        // }))
     }
 
     return (
