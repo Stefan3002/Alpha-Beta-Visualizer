@@ -10,7 +10,8 @@ export enum colors {
     highlight = 'red',
     regular = 'black',
     white = 'white',
-    comparison = 'green'
+    comparison = 'green',
+    pruned = 'blue'
 }
 export const canvasDimensions = {
     width: 500,
@@ -233,7 +234,7 @@ export const highlightAlphaBetaNode = async (node: AlphaBetaNode, color?: colors
 
     await waitOnPainting(settings.delay)
 
-    if(color === colors.comparison)
+    if(color === colors.comparison || color === colors.pruned)
         return;
 
     await paintAlphaBetaNode(node, colors.white, NODE_RADIUS + 5)

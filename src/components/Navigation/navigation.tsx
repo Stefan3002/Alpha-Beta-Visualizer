@@ -31,7 +31,7 @@ const Navigation = () => {
         })()
     }, [])
     const [info, setInfo] = useState<stepDataType>(null)
-    const [error, setError] = useState<errorType>(undefined)
+    let [error, setError] = useState<errorType>(undefined)
 
     useEffect(() => {
         if(info)
@@ -44,6 +44,9 @@ const Navigation = () => {
 
     useEffect(() => {
         if(error) {
+            // Trim the date from the error!
+            const trimIndex = error.indexOf('+++')
+            error = error.substring(0, trimIndex)
             dispatch(setInfoModal(
                 {
                     content: undefined,

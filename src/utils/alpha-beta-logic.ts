@@ -1,14 +1,13 @@
 // The logic for the AlphaBeta algorithm.
 
 
-import {levels, AlphaBetaNode, stepAlphaDataType, stepDataType, errorType} from "./data-structures";
-import {canvasDimensions, colors, usePaintingModule} from "./painting-logic";
+import {AlphaBetaNode, errorType, levels, stepDataType} from "./data-structures";
+import {canvasDimensions} from "./painting-logic";
 import {useDispatch, useSelector} from "react-redux";
 import {getModal} from "./store/utils-store/utils-selectors";
 import {Dispatch, SetStateAction} from "react";
 import {checkLeavesValidity, getSettings, waitOnUser} from "./general-logic";
-import {highlightAlphaBetaNode, useAlphaBetaPaintingModule} from "./alpha-beta-painting-logic";
-import {running} from "./min-max-logic";
+import {colors, highlightAlphaBetaNode, useAlphaBetaPaintingModule} from "./alpha-beta-painting-logic";
 
 const SETTINGS = getSettings()
 export let runningAlphaBeta = false
@@ -46,12 +45,15 @@ export const solveAlphaBetaFront = async ( root: AlphaBetaNode, setInfoCallback:
     // Check to see if you are good to go
     // Maybe there are leafs with no value
     if(!checkLeavesValidity(root)){
-        setErrorCallback('There are leaves with no value set.')
+        // The date is to not have the same message, as it will NOT
+        // trigger the useEffect hook!!!
+        // The +++ is a delimiter to be trimmed in the useEffect
+        setErrorCallback('There are leaves with no value set.+++' + Date.now())
         return;
     }
     // Maybe there is only the root in place
     if(root.children.length === 0){
-        setErrorCallback('There are no nodes created.')
+        setErrorCallback('There are no nodes created.+++' + Date.now())
         return;
     }
 
@@ -72,6 +74,8 @@ export const solveAlphaBeta = async (node: AlphaBetaNode, setInfoCallback: Dispa
         // alpha and beta
         if(node.alpha >= node.beta) {
             console.log('PRUNED!', node)
+            for(let j = i + 1; j < node.children.length; j++)
+                await highlightAlphaBetaNode(node.children[j])
             break
         }
     //     No need to prune right now!

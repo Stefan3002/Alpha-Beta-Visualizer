@@ -1,4 +1,5 @@
 import {AlphaBetaNode, Node} from "./data-structures";
+import {read} from "node:fs";
 
 type settingsType = {
     delay: number,
@@ -30,17 +31,19 @@ export const getSettings = () => settings
 
 
 export const checkLeavesValidity = (root: Node | AlphaBetaNode): boolean => {
-    if(_checkLeavesValidityAux(root) === undefined)
-        return true
-    else
-        return false
+    const ready = {
+        ready: true
+    }
+    _checkLeavesValidityAux(root, ready)
+    return ready.ready
 }
-const _checkLeavesValidityAux = (root: Node | AlphaBetaNode): boolean | undefined => {
+const _checkLeavesValidityAux = (root: Node | AlphaBetaNode, ready: {ready: boolean}): void => {
+    console.log('read', root)
     for(let node of root.children)
         if(node.leaf) {
             if (node.value === undefined)
-                return false;
+                ready.ready = false
         }
         else
-            _checkLeavesValidityAux(node)
+            _checkLeavesValidityAux(node, ready)
 }
