@@ -7,7 +7,7 @@ type settingsType = {
     waitOnUser: boolean
 }
 
-let settings: settingsType = {
+export let settings: settingsType = {
     delay: 700,
     draw_speed: .08,
     waitOnUser: false
@@ -47,3 +47,4 @@ const _checkLeavesValidityAux = (root: Node | AlphaBetaNode, ready: {ready: bool
         else
             _checkLeavesValidityAux(node, ready)
 }
+

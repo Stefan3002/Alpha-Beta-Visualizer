@@ -2,12 +2,12 @@
 
 
 import {AlphaBetaNode, errorType, levels, stepDataType} from "./data-structures";
-import {canvasDimensions} from "./painting-logic";
 import {useDispatch, useSelector} from "react-redux";
 import {getModal} from "./store/utils-store/utils-selectors";
 import {Dispatch, SetStateAction} from "react";
 import {checkLeavesValidity, getSettings, waitOnUser} from "./general-logic";
-import {colors, highlightAlphaBetaNode, useAlphaBetaPaintingModule} from "./alpha-beta-painting-logic";
+import {highlightAlphaBetaNode, useAlphaBetaPaintingModule} from "./alpha-beta-painting-logic";
+import {canvasDimensions, colors} from "./painting-general-logic";
 
 const SETTINGS = getSettings()
 export let runningAlphaBeta = false
@@ -74,8 +74,8 @@ export const solveAlphaBeta = async (node: AlphaBetaNode, setInfoCallback: Dispa
         // alpha and beta
         if(node.alpha >= node.beta) {
             console.log('PRUNED!', node)
-            for(let j = i + 1; j < node.children.length; j++)
-                await highlightAlphaBetaNode(node.children[j])
+            for(let j = i; j < node.children.length; j++)
+                await highlightAlphaBetaNode(node.children[j], colors.pruned)
             break
         }
     //     No need to prune right now!

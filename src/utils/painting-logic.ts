@@ -1,21 +1,13 @@
-import {Node} from "./data-structures";
+import {AlphaBetaNode, Node} from "./data-structures";
 import {setErrorModal, setInfoModal, setModal} from "./store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
 import {getSettings} from "./general-logic";
+import {canvasDimensions, colors, drawCircle, drawLine} from './painting-general-logic'
 import {running} from "./min-max-logic";
 
 const settings = getSettings()
 
-export enum colors {
-    highlight = 'red',
-    regular = 'black',
-    white = 'white',
-    comparison = 'green'
-}
-export const canvasDimensions = {
-    width: 500,
-    height: 500
-}
+
 
 const NODE_RADIUS = 20
 const MARGIN = 5
@@ -184,29 +176,12 @@ export const usePaintingModule = () => {
 }
 
 
-const paintTree = async (root: Node) => {
+const paintTree = async (root: Node | AlphaBetaNode) => {
     await paintNode(root, colors.regular, NODE_RADIUS)
     for(let child of root.children)
         await paintTree(child)
 }
 
-const drawCircle = (centerX: number, centerY: number, NODE_RADIUS: number, drawAngle: number = 0) => {
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath()
-    // ctx.moveTo(drawX, drawY)
-    ctx.arc(centerX, centerY, NODE_RADIUS, 0, drawAngle)
-    ctx.stroke()
-
-    drawAngle += settings.draw_speed
-    if(drawAngle < 2 * Math.PI)
-        requestAnimationFrame(() => drawCircle(centerX , centerY, NODE_RADIUS, drawAngle))
-}
-
-const drawLine = (x: number, y: number) => {
-    // ctx.beginPath()
-    ctx.lineTo(x, y)
-    ctx.stroke()
-}
 export const paintNode = async (node: Node, color: colors, NODE_RADIUS: number) => {
     const {x, y} = node.coordinates
     // Make the circle
@@ -216,7 +191,7 @@ export const paintNode = async (node: Node, color: colors, NODE_RADIUS: number) 
     // ctx.moveTo(x + NODE_RADIUS, y)
     // ctx.arc(x, y, NODE_RADIUS, 0, 2 * Math.PI)
 
-    drawCircle(x, y, NODE_RADIUS)
+    drawCircle(ctx, x, y, NODE_RADIUS)
 
     // ctx.stroke()
     // ctx.fill()
@@ -228,7 +203,7 @@ export const paintNode = async (node: Node, color: colors, NODE_RADIUS: number) 
         ctx.lineWidth = 3
     else
         ctx.lineWidth = 1
-    drawLine(node.father?.coordinates.x as number, node.father?.coordinates.y as number)
+    drawLine(ctx, node.father?.coordinates.x as number, node.father?.coordinates.y as number)
     ctx.lineWidth = 1
 }
 

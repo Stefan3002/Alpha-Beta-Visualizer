@@ -1,4 +1,4 @@
-import {canvasDimensions} from "./painting-logic";
+import {canvasDimensions} from "./painting-general-logic";
 
 export enum levels {
     max = 'max',

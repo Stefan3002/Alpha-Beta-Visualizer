@@ -1,9 +1,8 @@
 // The logic for the MinMax algorithm.
 
 import {errorType, levels, Node, stepDataType} from "./data-structures";
-import {canvasDimensions, colors, highlightNode, setNodeValue, usePaintingModule} from "./painting-logic";
-import {useDispatch, useSelector} from "react-redux";
-import {getModal} from "./store/utils-store/utils-selectors";
+import {highlightNode, setNodeValue, usePaintingModule} from "./painting-logic";
+import {colors} from './painting-general-logic'
 import {Dispatch, SetStateAction} from "react";
 import {checkLeavesValidity, getSettings, waitOnUser} from "./general-logic";
 

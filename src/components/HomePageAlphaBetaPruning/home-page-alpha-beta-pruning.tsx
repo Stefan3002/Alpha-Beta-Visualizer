@@ -1,7 +1,7 @@
 import './home-page-alpha-beta-pruning.css'
 import Navigation from "../Navigation/navigation";
 import Canvas from "../Canvas/canvas";
-import {canvasDimensions} from "../../utils/painting-logic";
+import {canvasDimensions} from "../../utils/painting-general-logic";
 const HomePageAlphaBetaPruning = () => {
     return (
         <div className='wrapper home-page'>

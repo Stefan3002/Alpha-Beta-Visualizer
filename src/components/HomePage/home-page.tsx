@@ -1,7 +1,7 @@
 import './home-page.css'
 import {FC} from "react";
 import Canvas from "../Canvas/canvas";
-import {canvasDimensions} from "../../utils/painting-logic";
+import {canvasDimensions} from "../../utils/painting-general-logic";
 import Navigation from "../Navigation/navigation";
 
 
