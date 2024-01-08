@@ -1,0 +1,32 @@
+.error-modal {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 30dvh;
+  width: 20dvw;
+  height: fit-content;
+}
+
+.error-modal-content {
+  text-align: center;
+}
+
+.error-data {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #0B3954;
+}
+
+.error-generic {
+  font-weight: 300;
+}
+
+.error-modal-header {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/*# sourceMappingURL=error-modal.css.map */

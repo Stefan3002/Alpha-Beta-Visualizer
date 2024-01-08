@@ -1,4 +1,4 @@
-import {Node} from "../../data-structures";
+import {AlphaBetaNode, Node} from "../../data-structures";
 
 const INITIAL_VALUE = {
     modal: {
@@ -7,6 +7,10 @@ const INITIAL_VALUE = {
         content: undefined
     },
     infoModal: {
+        opened: false,
+        content: undefined
+    },
+    errorModal: {
         opened: false,
         content: undefined
     }
@@ -25,6 +29,12 @@ type actionType = {
         opened: boolean
         content: string | undefined | Node
     }
+} | {
+    type: 'SET_ERROR_MODAL'
+    payload: {
+        opened: boolean
+        content: string | undefined | Node | AlphaBetaNode
+    }
 }
 
 export const utilsReducer = (state = INITIAL_VALUE, action: actionType) => {
@@ -41,6 +51,11 @@ export const utilsReducer = (state = INITIAL_VALUE, action: actionType) => {
             return {
                 ...state,
                 infoModal: payload
+            }
+        case 'SET_ERROR_MODAL':
+            return {
+                ...state,
+                errorModal: payload
             }
         default:
             return state

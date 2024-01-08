@@ -4,6 +4,7 @@ import SettingsModal from "../SettingsModal/settings-modal";
 import InputModal from "../InputModal/input-modal";
 import InfoModal from "../InfoModal/info-modal";
 import ComparisonModal from "../ComparisonModal/comparison-modal";
+import ErrorModal from "../ErrorModal/error-modal";
 
 type propsType = {
     type: string
@@ -16,6 +17,8 @@ const Modal: FC<propsType> = ({type}) => {
             return <InputModal />
         case 'info':
             return <InfoModal />
+        case 'error':
+            return <ErrorModal />
         case 'comparison':
             return <ComparisonModal />
         default:

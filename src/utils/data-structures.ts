@@ -11,6 +11,8 @@ export type stepDataType = {
     node: Node | AlphaBetaNode
 } | null
 
+export type errorType = string | undefined
+
 export type stepAlphaDataType = {
     alpha: number,
     beta: number

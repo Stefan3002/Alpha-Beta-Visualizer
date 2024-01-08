@@ -32,3 +32,18 @@ export const setInfoModal = (payload: {
     }
 }
 
+export const setErrorModal = (payload: {
+    opened: boolean,
+    content?: string | Node | {
+        info: string
+    } | {
+        value: string,
+        level: levels
+    },
+}) => {
+    return {
+        type: 'SET_ERROR_MODAL',
+        payload
+    }
+}
+

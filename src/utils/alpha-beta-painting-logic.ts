@@ -130,6 +130,13 @@ export const useAlphaBetaPaintingModule = () => {
 
             const collidedNode = checkForCollision(x, y, root)
             if (collidedNode) {
+                // Check if it is the root!
+                if(collidedNode == root)
+                    return;
+                // Check if it is a leaf!
+                if(!collidedNode.leaf)
+                    return;
+                // Now it is a leaf for sure!
                 highlightAlphaBetaNode(collidedNode)
                 dispatch(setModal({
                     opened: true,

@@ -1,12 +1,16 @@
 import './blur.css'
 import {useDispatch} from "react-redux";
-import {setInfoModal, setModal} from "../../utils/store/utils-store/utils-actions";
+import {setErrorModal, setInfoModal, setModal} from "../../utils/store/utils-store/utils-actions";
 const Blur = () => {
     const dispatch = useDispatch()
     const closeModals = () => {
         dispatch(setModal({
             opened: false,
             type: undefined,
+            content: undefined
+        }))
+        dispatch(setErrorModal({
+            opened: false,
             content: undefined
         }))
         // dispatch(setInfoModal({

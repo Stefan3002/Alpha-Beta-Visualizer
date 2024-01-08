@@ -125,11 +125,15 @@ export const usePaintingModule = () => {
         canvas.addEventListener('click', async (event) => {
             if(running)
                 return;
+
             const x = event.clientX - boundBox.left
             const y = event.clientY - boundBox.top
 
             const collidedNode = checkForCollision(x, y, root)
             if (collidedNode) {
+                // Check if it is the root!
+                if(collidedNode == root)
+                    return;
                 // Check if it is a leaf!
                 if(!collidedNode.leaf)
                     return;

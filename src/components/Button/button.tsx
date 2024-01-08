@@ -3,7 +3,7 @@ import {FC} from "react";
 
 type propsType = {
     text: string,
-    callback?: () => {},
+    callback?: () => void,
     classN?: string
 }
 const Button: FC<propsType> = ({classN, text, callback = () => {}}) => {

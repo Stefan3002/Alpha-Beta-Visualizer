@@ -2,8 +2,8 @@ import './navigation.css'
 import Button from "../Button/button";
 import {running, solveMinMaxFront, useMinMaxAlgo} from "../../utils/min-max-logic";
 import {useEffect, useRef, useState} from "react";
-import {AlphaBetaNode, levels, Node, stepAlphaDataType, stepDataType} from "../../utils/data-structures";
-import {setInfoModal, setModal} from "../../utils/store/utils-store/utils-actions";
+import {AlphaBetaNode, errorType, levels, Node, stepAlphaDataType, stepDataType} from "../../utils/data-structures";
+import {setErrorModal, setInfoModal, setModal} from "../../utils/store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
 import QuestionSVG from '../../utils/imgs/svgs/QuestionSVG.svg'
 import {Link} from "react-router-dom";
@@ -32,6 +32,7 @@ const Navigation = () => {
     }, [])
     const [info, setInfo] = useState<stepDataType>(null)
     const [alphaInfo, setAlphaInfo] = useState<stepAlphaDataType>(null)
+    const [error, setError] = useState<errorType>(undefined)
 
     useEffect(() => {
         if(info)
@@ -42,11 +43,33 @@ const Navigation = () => {
             }))
     }, [info])
 
+    useEffect(() => {
+        if(error) {
+            dispatch(setInfoModal(
+                {
+                    content: undefined,
+                    opened: false
+                }
+            ))
+            dispatch(setModal(
+                {
+                    type: undefined,
+                    content: undefined,
+                    opened: false
+                }
+            ))
+            dispatch(setErrorModal({
+                content: error,
+                opened: true,
+            }))
+        }
+    }, [error])
+
     const startAlgo = async () => {
         switch (window.location.pathname) {
             case '/':
                 if(!running)
-                await solveMinMaxFront(rootNode.current, setInfo)
+                await solveMinMaxFront(rootNode.current, setInfo, setError)
                 break
             case '/alpha-beta-pruning':
                 if(!running)
@@ -65,29 +88,40 @@ const Navigation = () => {
         }))
         return {};
     }
+    const resetAlgo = () => {
+        window.location.reload()
+    }
 
     return (
         <nav className='navigation'>
             <h1>Min Max Visualizer</h1>
+            <img onClick={() => {
+                dispatch(setInfoModal({
+                        opened: true,
+                        content: {
+                            info: 'How does this work?'
+                        }
+                    }
+                ))
+            }} src={QuestionSVG} className='icon-svg' alt=""/>
             <ul className='algorithms'>
-                <Link to='/'><li className={window.location.pathname === '/' ? 'active-link' : undefined}>Min Max</li></Link>
-                <Link to='/alpha-beta-pruning'><li className={window.location.pathname === '/alpha-beta-pruning' ? 'active-link' : undefined}>Alpha Beta Pruning</li></Link>
+                <Link to='/'>
+                    <li className={window.location.pathname === '/' ? 'active-link' : undefined}>Min Max</li>
+                </Link>
+                <Link to='/alpha-beta-pruning'>
+                    <li className={window.location.pathname === '/alpha-beta-pruning' ? 'active-link' : undefined}>Alpha
+                        Beta Pruning
+                    </li>
+                </Link>
                 {/*<li>Expecti-Max</li>*/}
             </ul>
             <div className="nav-buttons">
-                <Button callback={openSettings} text='Settings' />
-                <Button callback={startAlgo} text='Start' />
-                <img onClick={() => {
-                    dispatch(setInfoModal({
-                            opened: true,
-                            content: {
-                                info: 'How does this work?'
-                            }
-                        }
-                    ))
-                }} src={QuestionSVG} className='icon-svg' alt=""/>
+                <Button callback={openSettings} text='Settings'/>
+                <Button classN='continue' text='Next step'/>
             </div>
-            <Button classN='continue' text='Next step'/>
+            <Button callback={startAlgo} text='Start'/>
+            <Button callback={resetAlgo} text='Reset'/>
+
             {/*<p>{alphaInfo? alphaInfo.alpha : null}</p>*/}
             {/*<p>{alphaInfo? alphaInfo.beta : null}</p>*/}
             {/*<p className='continue'>Next step</p>*/}
