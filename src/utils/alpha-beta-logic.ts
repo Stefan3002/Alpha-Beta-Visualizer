@@ -74,6 +74,7 @@ export const solveAlphaBeta = async (node: AlphaBetaNode, setInfoCallback: Dispa
         // alpha and beta
         if(node.alpha >= node.beta) {
             console.log('PRUNED!', node)
+            // TODO: Fix the coloring of pruned nodes
             for(let j = i; j < node.children.length; j++)
                 await highlightAlphaBetaNode(node.children[j], colors.pruned)
             break
