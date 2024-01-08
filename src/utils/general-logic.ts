@@ -1,3 +1,5 @@
+import {AlphaBetaNode, Node} from "./data-structures";
+
 type settingsType = {
     delay: number,
     draw_speed: number,
@@ -25,3 +27,20 @@ export const waitOnUser = (): Promise<void> => {
 }
 
 export const getSettings = () => settings
+
+
+export const checkLeavesValidity = (root: Node | AlphaBetaNode): boolean => {
+    if(_checkLeavesValidityAux(root) === undefined)
+        return true
+    else
+        return false
+}
+const _checkLeavesValidityAux = (root: Node | AlphaBetaNode): boolean | undefined => {
+    for(let node of root.children)
+        if(node.leaf) {
+            if (node.value === undefined)
+                return false;
+        }
+        else
+            _checkLeavesValidityAux(node)
+}

@@ -5,44 +5,14 @@ import {canvasDimensions, colors, highlightNode, setNodeValue, usePaintingModule
 import {useDispatch, useSelector} from "react-redux";
 import {getModal} from "./store/utils-store/utils-selectors";
 import {Dispatch, SetStateAction} from "react";
-import {getSettings, waitOnUser} from "./general-logic";
+import {checkLeavesValidity, getSettings, waitOnUser} from "./general-logic";
 
 const SETTINGS = getSettings()
 
 export let running = false
 
-
-const createDummyTree = (root: Node) => {
-    root.children.push(new Node(undefined, root, {x: canvasDimensions.width / 2, y: 50}))
-    root.children.push(new Node(undefined, root, {x: 150, y: 20}))
-
-    root.children[0].children.push(new Node(1, root.children[0],{x: 20, y: 40}))
-    root.children[0].children.push(new Node(0, root.children[0], {x: 40, y: 40}))
-
-    root.children[1].children.push(new Node(4, root.children[1], {x: 140, y: 40}))
-    root.children[1].children.push(new Node(8, root.children[1], {x: 160, y: 40}))
-}
-
-const checkLeavesValidity = (root: Node): boolean => {
-    if(_checkLeavesValidityAux(root) === undefined)
-        return true
-    else
-        return false
-}
-const _checkLeavesValidityAux = (root: Node): boolean | undefined => {
-    for(let node of root.children)
-        if(node.leaf) {
-            if (node.value === undefined)
-                return false;
-        }
-        else
-            _checkLeavesValidityAux(node)
-}
-
 export const useMinMaxAlgo = () => {
     const initPaintingModule = usePaintingModule()
-    const dispatch = useDispatch()
-    const modal = useSelector(getModal)
 
     return async () => {
         const root = new Node()
@@ -72,8 +42,8 @@ export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<Set
 
     running = true
     await solveMinMax(root, setInfoCallback, setErrorCallback)
-    const [decision, _] = await getDecision(root, setInfoCallback)
-    setNodeValue(root, decision)
+    // const [decision, _] = await getDecision(root, setInfoCallback)
+    // setNodeValue(root, decision)
 }
 
 export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetStateAction<stepDataType>>, setErrorCallback: Dispatch<SetStateAction<errorType>>) =>{
@@ -93,6 +63,8 @@ export const solveMinMax = async (node: Node, setInfoCallback: Dispatch<SetState
     if(!ready)
         for(let i = 0 ; i < node.children.length; i++) {
             const child = node.children[i]
+            if(child.value !== undefined)
+                continue
             await solveMinMax(child, setInfoCallback, setErrorCallback)
             // Maybe now all the children have a set value
             // break if so, no need to go to children with set values

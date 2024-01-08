@@ -31,7 +31,6 @@ const Navigation = () => {
         })()
     }, [])
     const [info, setInfo] = useState<stepDataType>(null)
-    const [alphaInfo, setAlphaInfo] = useState<stepAlphaDataType>(null)
     const [error, setError] = useState<errorType>(undefined)
 
     useEffect(() => {
@@ -74,7 +73,7 @@ const Navigation = () => {
             case '/alpha-beta-pruning':
                 if(!running)
                 // @ts-ignore
-                await solveAlphaBetaFront(rootNode.current, setInfo, setAlphaInfo)
+                await solveAlphaBetaFront(rootNode.current, setInfo, setError)
                 break
         }
 

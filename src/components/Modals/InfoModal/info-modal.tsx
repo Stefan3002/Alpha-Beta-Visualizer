@@ -1,4 +1,5 @@
 import './info-modal.css'
+import {motion} from "framer-motion";
 import Input from "../../Input/input";
 import Button from "../../Button/button";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +12,9 @@ import BetaSVG from '../../../utils/imgs/svgs/BetaSVG.svg'
 import CloseSVG from '../../../utils/imgs/svgs/CloseSVG.svg'
 import {setInfoModal, setModal} from "../../../utils/store/utils-store/utils-actions";
 import {getSettings} from "../../../utils/general-logic";
+import {AnimatePresence} from "framer-motion";
+import {nodeValueAnimate, nodeValueExit, nodeValueParams} from "../../Transition/transition-params";
+import Transition from "../../Transition/transition";
 const InfoModal = () => {
     const dispatch = useDispatch()
     const nodeInfo = useSelector(getInfoModal).content
@@ -33,25 +37,50 @@ const InfoModal = () => {
             <div className="modal-content">
                 <div className="piece-info">
                     <img className='icon-svg' src={ValueSVG} alt=""/>
-                    {nodeInfo?.value ? <p>{nodeInfo?.value}</p> : <p>undefined</p>}
+                    <AnimatePresence mode='wait'>
+                        {nodeInfo?.value ?
+                            // This is actually a de-optimization of REACT re-rendering
+                            // Because here I want to Remount the component, so Framer JS
+                            // can run its magic
+                            <Transition keyName={`node-value-${nodeInfo?.value}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                            {nodeInfo?.value}
+                            </Transition>
+                            : <p key='undefined-value'>-</p>}
+                    </AnimatePresence>
                 </div>
                 <div className="piece-info">
                     <img className='icon-svg' src={LevelSVG} alt=""/>
-                    <p>{nodeInfo?.level}</p>
+                    <AnimatePresence mode='wait'>
+                        <Transition keyName={`node-level-${nodeInfo?.level}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                            {nodeInfo?.level}
+                        </Transition>
+                    </AnimatePresence>
                 </div>
                 <div className="piece-info">
                     <img className='icon-svg' src={LeafSVG} alt=""/>
-                    <p>{nodeInfo?.leaf ? 'true' : 'false'}</p>
+                    <AnimatePresence mode='wait'>
+                        <Transition keyName={`node-level-${nodeInfo?.leaf ? 'true' : 'false'}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                            {nodeInfo?.leaf ? 'true' : 'false'}
+                        </Transition>
+                    </AnimatePresence>
                 </div>
             </div>
             <div className="alpha-beta-info">
                 {nodeInfo.alpha ? <div className="piece-info">
                     <img className='icon-svg' src={AlphaSVG} alt=""/>
-                    <p>{nodeInfo?.alpha}</p>
+                    <AnimatePresence mode='wait'>
+                        <Transition keyName={`node-level-${nodeInfo?.alpha}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                            {nodeInfo?.alpha}
+                        </Transition>
+                    </AnimatePresence>
                 </div> : null}
                 {nodeInfo.beta ? <div className="piece-info">
                     <img className='icon-svg' src={BetaSVG} alt=""/>
-                    <p>{nodeInfo?.beta}</p>
+                    <AnimatePresence mode='wait'>
+                        <Transition keyName={`node-level-${nodeInfo?.beta}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                            {nodeInfo?.beta}
+                        </Transition>
+                    </AnimatePresence>
                 </div> : null}
             </div>
         </div>

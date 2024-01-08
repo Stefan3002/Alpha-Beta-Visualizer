@@ -28,7 +28,7 @@ const ErrorModal: FC<propsType> = () => {
             <div className='modal error-modal'>
                 <div className="modal-header error-modal-header">
                     <h2>Error</h2>
-                    <img className='icon-svg' onClick={closeErrorModals} src={CloseSVG} alt='Close'/>
+                    <img className='icon-svg close-svg' onClick={closeErrorModals} src={CloseSVG} alt='Close'/>
                 </div>
                 <div className="modal-content error-modal-content">
                     <p className='error-generic'>Something went wrong!</p>

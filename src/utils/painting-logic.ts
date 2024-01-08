@@ -1,5 +1,5 @@
 import {Node} from "./data-structures";
-import {setInfoModal, setModal} from "./store/utils-store/utils-actions";
+import {setErrorModal, setInfoModal, setModal} from "./store/utils-store/utils-actions";
 import {useDispatch} from "react-redux";
 import {getSettings} from "./general-logic";
 import {running} from "./min-max-logic";
@@ -130,13 +130,24 @@ export const usePaintingModule = () => {
             const y = event.clientY - boundBox.top
 
             const collidedNode = checkForCollision(x, y, root)
+
             if (collidedNode) {
                 // Check if it is the root!
-                if(collidedNode == root)
+                if(collidedNode == root) {
+                    dispatch(setErrorModal({
+                        opened: true,
+                        content: 'You can not set a value for the root.'
+                    }))
                     return;
+                }
                 // Check if it is a leaf!
-                if(!collidedNode.leaf)
+                if(!collidedNode.leaf) {
+                    dispatch(setErrorModal({
+                        opened: true,
+                        content: 'You can not set a value for a node that is not a leaf.'
+                    }))
                     return;
+                }
                 // Now it is a leaf for sure!
                 highlightNode(collidedNode)
                 dispatch(setModal({

@@ -9,6 +9,8 @@ import Modal from "./components/Modals/Modal/modal";
 import Blur from "./components/Blur/blur";
 import {getSettings} from "./utils/general-logic";
 import HomePageAlphaBetaPruning from "./components/HomePageAlphaBetaPruning/home-page-alpha-beta-pruning";
+import Transition from "./components/Transition/transition";
+import {AnimatePresence} from "framer-motion";
 
 function App() {
 
@@ -27,14 +29,16 @@ function App() {
             </> :
             <>
                 {modal?.content?.info || settings.waitOnUser ? <Blur /> : null}
-                <Modal type={modal.type} />
+                <Transition type='comparison'><Modal type={modal.type} /></Transition>
             </>
             :
             null}
 
         {modalInfo?.content?.info ? <Blur /> : null}
-        {modalInfo?.opened ? <Modal type='info' /> : null}
-        {errorInfo?.opened ? <><Blur /><Modal type='error' /></> : null}
+        {modalInfo?.opened ? <Transition type='info'><Modal type='info' /></Transition> : null}
+        {/*<AnimatePresence mode='wait'>*/}
+            {errorInfo?.opened && (<><Blur/><Transition type='error'><Modal type='error' /></Transition></>)}
+        {/*</AnimatePresence>*/}
 
       <Routes>
         <Route path='' element={<HomePage />} />

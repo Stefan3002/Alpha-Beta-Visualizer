@@ -8,6 +8,9 @@ import AlphaSVG from "../../../utils/imgs/svgs/AlphaSVG.svg";
 import BetaSVG from "../../../utils/imgs/svgs/BetaSVG.svg";
 import CloseSVG from "../../../utils/imgs/svgs/CloseSVG.svg";
 import {setInfoModal, setModal} from "../../../utils/store/utils-store/utils-actions";
+import Transition from "../../Transition/transition";
+import {nodeValueAnimate, nodeValueExit, nodeValueParams} from "../../Transition/transition-params";
+import {AnimatePresence} from "framer-motion";
 const ComparisonModal = () => {
     const dispatch = useDispatch()
     const data = useSelector(getModal).content
@@ -29,11 +32,24 @@ const ComparisonModal = () => {
                 <div className='comparison-group'>
                     <div className="piece-info">
                         <img className='icon-svg' src={ValueSVG} alt=""/>
-                        <p>{data.value}</p>
+                        <AnimatePresence mode='wait'>
+                            {data.value ?
+                                // This is actually a de-optimization of REACT re-rendering
+                                // Because here I want to Remount the component, so Framer JS
+                                // can run its magic
+                                <Transition keyName={`node-value-${data.value}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                                    {data.value}
+                                </Transition>
+                                : <p key='undefined-value'>-</p>}
+                        </AnimatePresence>
                     </div>
                     <div className="piece-info">
                         <img className='icon-svg' src={LevelSVG} alt=""/>
-                        <p>{data.level}</p>
+                        <AnimatePresence mode='wait'>
+                            <Transition keyName={`node-level-${data.level}`} type='value' exit={nodeValueExit} animate={nodeValueAnimate} initial={nodeValueParams}>
+                                {data.level}
+                            </Transition>
+                        </AnimatePresence>
                     </div>
                 </div>
 
@@ -41,35 +57,90 @@ const ComparisonModal = () => {
                     <div className="node-info">
                         <img className='icon-svg' src={NodeSVG} alt=""/>
                         <p>Current node (father)</p>
-                        <p>Value: {data.father?.value}</p>
-                        <div className="alpha-beta-info">
-                            <div className="piece-info">
-                                <img className='icon-svg' src={AlphaSVG} alt=""/>
-                                <p>{data?.node.alpha}</p>
-                            </div>
-                            <div className="piece-info">
-                                <img className='icon-svg' src={BetaSVG} alt=""/>
-                                <p>{data?.node.beta}</p>
-                            </div>
+                        <div className="piece-info piece-info-centered">
+                            <p>Value:</p>
+                            <AnimatePresence mode='wait'>
+                                {data.father?.value ?
+                                    // This is actually a de-optimization of REACT re-rendering
+                                    // Because here I want to Remount the component, so Framer JS
+                                    // can run its magic
+                                    <Transition keyName={`node-value-${data.father?.value}`} type='value'
+                                                exit={nodeValueExit} animate={nodeValueAnimate}
+                                                initial={nodeValueParams}>
+                                        {data.father?.value}
+                                    </Transition>
+                                    : <p key='undefined-value'>-</p>}
+                            </AnimatePresence>
                         </div>
-                        <p>Level: {data.father?.level}</p>
+
+
+                        {window.location.pathname === '/alpha-beta-pruning' &&
+                            <div className="alpha-beta-info">
+                                <div className="piece-info">
+                                    <img className='icon-svg' src={AlphaSVG} alt=""/>
+                                    <p>{data?.father.alpha}</p>
+                                </div>
+                                <div className="piece-info">
+                                    <img className='icon-svg' src={BetaSVG} alt=""/>
+                                    <p>{data?.father.beta}</p>
+                                </div>
+                            </div>}
+                        <div className="piece-info piece-info-centered">
+                            <img className='icon-svg' src={LevelSVG} alt=""/>
+                            <AnimatePresence mode='wait'>
+                                <Transition keyName={`node-level-${data.father?.level}`} type='value'
+                                            exit={nodeValueExit}
+                                            animate={nodeValueAnimate} initial={nodeValueParams}>
+                                    {data.father?.level}
+                                </Transition>
+                            </AnimatePresence>
+                        </div>
+
                     </div>
                     <div className="node-info">
                         <img className='icon-svg' src={NodeSVG} alt=""/>
                         <p>Comparison node (child)</p>
-                        <p>Value: {data.node?.value}</p>
-                        <div className="alpha-beta-info">
-                            <div className="piece-info">
-                                <img className='icon-svg' src={AlphaSVG} alt=""/>
-                                <p>{data?.node.alpha}</p>
-                            </div>
-                            <div className="piece-info">
-                                <img className='icon-svg' src={BetaSVG} alt=""/>
-                                <p>{data?.node.beta}</p>
-                            </div>
+
+                        <div className="piece-info piece-info-centered">
+                            <p>Value:</p>
+                            <AnimatePresence mode='wait'>
+                                {data.node?.value ?
+                                    // This is actually a de-optimization of REACT re-rendering
+                                    // Because here I want to Remount the component, so Framer JS
+                                    // can run its magic
+                                    <Transition keyName={`node-value-${data.node?.value}`} type='value'
+                                                exit={nodeValueExit} animate={nodeValueAnimate}
+                                                initial={nodeValueParams}>
+                                        {data.node?.value}
+                                    </Transition>
+                                    : <p key='undefined-value'>-</p>}
+                            </AnimatePresence>
                         </div>
-                        <p>Level: {data.node?.level}</p>
+
+                        {window.location.pathname === '/alpha-beta-pruning' &&
+                            <div className="alpha-beta-info">
+                                <div className="piece-info">
+                                    <img className='icon-svg' src={AlphaSVG} alt=""/>
+                                    <p>{data?.node.alpha}</p>
+                                </div>
+                                <div className="piece-info">
+                                    <img className='icon-svg' src={BetaSVG} alt=""/>
+                                    <p>{data?.node.beta}</p>
+                                </div>
+                            </div>
+                        }
+                        <div className="piece-info piece-info-centered">
+                            <img className='icon-svg' src={LevelSVG} alt=""/>
+                            <AnimatePresence mode='wait'>
+                                <Transition keyName={`node-level-${data.node?.level}`} type='value' exit={nodeValueExit}
+                                            animate={nodeValueAnimate} initial={nodeValueParams}>
+                                    {data.node?.level}
+                                </Transition>
+                            </AnimatePresence>
+                        </div>
+
                     </div>
+
                 </div>
 
             </div>

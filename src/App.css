@@ -23,6 +23,20 @@ a {
   margin: 0 auto;
 }
 
+.close-svg:hover {
+  animation-name: spin;
+  animation-duration: 0.7s;
+  transition: all 0.2s;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0) scale(1.1);
+  }
+  to {
+    transform: rotate(360deg) scale(1.1);
+  }
+}
 .icon-svg {
   max-width: 40px;
   transition: all 0.2s;

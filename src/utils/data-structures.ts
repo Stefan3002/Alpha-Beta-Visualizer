@@ -88,7 +88,7 @@ export class AlphaBetaNode extends Node {
     constructor(value: number | undefined = undefined, father: AlphaBetaNode | null = null, coordinates: coordinatesType =
                     {
                         x: canvasDimensions.width / 2,
-                        y: 0
+                        y: 30
                     }
         , children: AlphaBetaNode[] = [], color = 'default', highlighted = false, alpha: number = -Infinity, beta: number = Infinity) {
         super(value, father, coordinates, children, color, highlighted);
