@@ -108,9 +108,10 @@ const _upDecision = async (node: AlphaBetaNode, setInfoCallback: Dispatch<SetSta
             father: node.father,
             node: node
         })
-        node.father.beta = Math.min(node.father.beta, node.beta, node.alpha)
         if(SETTINGS.waitOnUser)
             await waitOnUser()
+        node.father.beta = Math.min(node.father.beta, node.beta, node.alpha)
+
     }
     else{
         setInfoCallback({
