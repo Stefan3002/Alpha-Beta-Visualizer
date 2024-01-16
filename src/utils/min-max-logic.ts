@@ -30,12 +30,12 @@ export const solveMinMaxFront = async (root: Node, setInfoCallback: Dispatch<Set
     // Check to see if you are good to go
     // Maybe there are leafs with no value
     if(!checkLeavesValidity(root)){
-        setErrorCallback('There are leaves with no value set.')
+        setErrorCallback('There are leaves with no value set.+++' + Date.now())
         return;
     }
     // Maybe there is only the root in place
     if(root.children.length === 0){
-        setErrorCallback('There are no nodes created.')
+        setErrorCallback('There are no nodes created.+++' + Date.now())
         return;
     }
 
